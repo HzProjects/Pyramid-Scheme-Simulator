@@ -1,0 +1,99 @@
+
+span:hover(){
+    color:red;
+    cursor:pointer;
+}
+.fItem {
+    background: rgb(240, 240, 240);
+    padding:10px 20px 10px 20px; 
+    margin :5px 5px;
+    position: relative; top:-5px;
+    word-wrap: none;
+    
+}
+.flex-box {
+    display:flex;
+    flex-wrap:wrap;
+    height:50px;
+    flex: 1 1 auto;
+    widows: 100%;;
+    align-items: baseline;
+    align-content: flex-start;
+    justify-content: center;
+}
+.flex-boxV {
+    display:flex;
+    flex-wrap: row;
+    height:50px;
+    widows: 100%;;
+    align-items: baseline;
+    align-content: flex-start;
+    flex-direction: column;
+    flex:1;
+}
+
+
+.aPrompt {
+    background-color:whitesmoke;
+    width:670px;
+    position:relative;
+    margin:5px 5px;
+    word-wrap: break-word;
+    
+}
+.aExit {
+    color:black;
+    cursor:pointer;
+    float:right;
+    
+}
+    .aExit:hover {
+        color:red;
+        transition: .3s;
+    }
+
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    width:700px;
+  }
+  
+  /* Style the buttons that are used to open the tab content */
+  .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 71.9px;
+    transition: 0.3s;
+  }
+  
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #ddd;
+  }
+  
+  /* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    
+    width:675px;
+    display: none;
+    padding: 4px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    overflow:scroll;
+    height:500px;
+  }
+.shopContent {
+  display:none;
+}
+.justifyLeft {
+  justify-content: left;
+}
