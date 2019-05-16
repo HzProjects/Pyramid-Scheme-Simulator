@@ -29,7 +29,11 @@ var NumberRep=[0,1000,1000000,1000000000,1000000000000,1000000000000000];
 var NumberName=["","k","M","B","T","Q"];
 var ActionHist =["Nothing"];
 var yourLayer=Math.round(Math.random()*4);
-
+var ImproveSellCost=0;
+var ImproveSellTime=5;
+var ImproveRecCost=0;
+var ImproveRecTime=5;
+//var Improve
 
 function addPrompt(Say, Type) { //adds a "aPrompt" class to the first div
     var aTempClass = document.getElementById(Type);
@@ -139,7 +143,7 @@ function Selling() { //Specific calc for selling
 
     }*/
     
-    
+    ActionHist.push("Selling");
 }
 function start() { //Functions ran when you pay the start fee
     hide_Class("PayUp0");
@@ -202,8 +206,14 @@ function changePyrInfo()
     tempString="low";
     else if(Rep<=23)
     tempString="Very low";
-    else
+    else if(Rep<=29)
     tempString="Trash";
+    else if(Rep<=35)
+    tempString="Very Trash";
+    else if(Rep<=41)
+    tempString="Complete Trash";
+    else
+    tempString="The Trash";
     document.getElementById("displayPublicKnow").innerText="Reputation:"+tempString;
 }
 function changeRep(PRep,RepOwn)
@@ -279,8 +289,8 @@ function changeTime(Differ) //function for changing time, timers, and decide wha
         //if(distribute>20 && Math.round(distribute*.05*Rep) <20)
         if(Rep >5)
         {
-        if(Rep<20)
-        changeDis(-1*Math.round(distribute*.025*Rep));
+        if(Rep<50)
+        changeDis(-1*Math.round(distribute*.01*Rep));
         else
         changeDis(-1*Math.round(distribute*.5));
         }
@@ -384,11 +394,11 @@ function disEarning() { //Decide money made from distributors
     while(Pyr_Layers[temp]<tempDis)
     {
         //console.log(tempDis);
-        changeCash(Math.round(Pyr_Layers[temp]*400*(Math.pow(.1,temp+1))));
+        changeCash(Math.round(Pyr_Layers[temp]*300*(Math.pow(.1,temp+1))));
         tempDis-=Pyr_Layers[temp];
         temp++;
     }
-    changeCash(Math.round(tempDis*200*Math.pow(.08,temp)));
+    changeCash(Math.round(tempDis*300*Math.pow(.1,temp+1)));
     //console.log(monthlyCash);
 }
 
@@ -406,11 +416,12 @@ function TipFunc() {addPrompt(Tips[Math.round(Math.random()*(Tips.length-1))],"f
 function Recruit(){
     changeTime(52);
     var aTemp = document.getElementById("Options_Dropdown");
-    recruitAmt=0;
+    var recruitAmt=abilityRecruiting;
     var Target = aTemp.options[aTemp.selectedIndex].value;
     if(Target=="1")
     {
         recruitAmt=Math.round((Population_Framily/10));
+        
         changeRep(0.1,0.3);
     }
     else if(Target=="2")
@@ -435,11 +446,12 @@ function Recruit(){
         if(distribute>(Population_local/20))
             recruitAmt-=5;
         else 
-            recruitAmt+=Math.round(Math.random()*1);
+            recruitAmt=Math.round(Math.random()*1);
     }
     //console.log(recruitAmt);
     //recruitAmt=Math.round((recruitAmt-(Rep^3))/2);
     //console.log(recruitAmt);
+    //recruitAmt+=abilityRecruiting;
     if(overUsed("Recruit")>5)
         recruitAmt=Math.round(recruitAmt/2);
 
@@ -461,7 +473,7 @@ function Recruit(){
     if(overUsed("Recruit")>5)
     {
     document.getElementById("recInfo").innerText=
-    document.getElementById("recInfo").innerText+". Action has been overused(decreased effectivness)"
+    document.getElementById("recInfo").innerText+". Action has been overused(decreased effectiveness)"
     }
     changeRep(0.1,0.1);
     
@@ -496,7 +508,7 @@ function overUsed(temp)
     if(document.getElementById("recInfo").innerText.includes("Action"))
     {
         document.getElementById("recInfo").innerText=
-        document.getElementById("recInfo").innerText.substring(0,document.getElementById("recInfo").innerText.substring.length)
+        document.getElementById("recInfo").innerText.substring(0,document.getElementById("recInfo").innerText.length-50)
 
     }
      return count;   
@@ -506,14 +518,10 @@ function RepEvents()
     var temp = document.getElementById("theMedium");
     var Target=temp.options[temp.selectedIndex].value;
     RepSuccess=Math.random();
-    if(overUsed("RepEvents")>2)
+    if(overUsed("RepEvents")>4)
     {
-        //console.log(RepSuccess);
-        //console.log("heh");
-        RepSuccess=RepSuccess/3;
-        //document.getElementById("RepHint").innerHTML="hrhsg";
-        //document.getElementById("RepHint").innerText+". Action has been overused(decreased effectivness)";
-        if(overUsed("RepEvents")>5)
+        RepSuccess=RepSuccess/3; 
+        if(overUsed("RepEvents")>7)
             RepSuccess=0;
         //console.log(RepSuccess);
     }
@@ -524,7 +532,7 @@ function RepEvents()
         if(RepSuccess>.50)
         {
             Population_Framily+=20;
-            changeRep(0,-.5);
+            changeRep(0,-1);
             document.getElementById("RepHint").innerText="Success";
         }
         else
@@ -543,6 +551,38 @@ function RepEvents()
     ActionHist.push("RepEvents");
     //console.log(RepSuccess);
 }
+    function Improvements(Type)
+    {
+        if(Type==1)
+        {
+            if(ImproveSellCost<myCash)
+            {
+                abilitySelling+=.25;
+                changeCash(-1*ImproveSellCost);
+                changeTime(ImproveSellTime);
+                ImproveSellTime+=5;
+                if(ImproveSellTime>20)
+                    ImproveSellCost+=10;
+                document.getElementById("ImproveSell").innerText="will cost "+ImproveSellCost+"$ & Will take "+
+                ImproveSellTime+ " hours to do";
+            }
+
+        }
+        else if(Type==2)
+        {
+            if(ImproveRecCost<myCash)
+            {
+                abilityRecruiting+=.25;
+                changeCash(-1*ImproveRecCost);
+                changeTime(ImproveRecTime)
+                ImproveRecTime+=5;
+                if(ImproveRecTime>20)
+                    ImproveRecCost+=10;
+                document.getElementById("ImproveRec").innerText="will cost "+ImproveRecCost+"$ & Will take "+
+                ImproveRecTime+ " hours to do";
+            }
+        }
+    }
 //Functions to call at the start of page loading
 //var tipRunner = setInterval(function(){TipFunc()},120000);
 changeCash(0);
