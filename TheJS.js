@@ -247,6 +247,7 @@ function changeDis(Differ)
         document.getElementById("Dis_F").innerHTML=getAbbrev(distribute,0)+" distributors";
     else
         document.getElementById("Dis_F").innerHTML=getAbbrev(distribute,1)+" distributors";
+    Population_local=Population_local-Differ;
 
 }
 function changeProd(Differ)
@@ -285,6 +286,7 @@ function changeTime(Differ) //function for changing time, timers, and decide wha
         }
 
         //changeRep(0,-1*(Rep*.1));
+        overUsed("");
     }
     if(Time.getFullYear() > tempYear)
     {
@@ -420,7 +422,7 @@ function Recruit(){
             temp+=Pyr_Layers[i];
             i++;
         }
-        console.log(temp);
+        //console.log(temp);
         temp=Math.round(temp-distribute);
         //if(temp>500)
         //recruitAmt+=Math.round(Math.random()*(distribute-temp))
@@ -438,7 +440,10 @@ function Recruit(){
     //console.log(recruitAmt);
     //recruitAmt=Math.round((recruitAmt-(Rep^3))/2);
     //console.log(recruitAmt);
+    if(overUsed("Recruit")>5)
+        recruitAmt=Math.round(recruitAmt/2);
 
+    //console.log(overUsed("Recruit"));
     if(recruitAmt>0)
     {
         if(Target=="1" && Population_Framily>0)
@@ -453,8 +458,15 @@ function Recruit(){
     document.getElementById("recInfo").innerHTML=getAbbrev(recruitAmt,0)+" distributors recruited";
     else
     document.getElementById("recInfo").innerHTML="0 distributors recruited";
-
+    if(overUsed("Recruit")>5)
+    {
+    document.getElementById("recInfo").innerText=
+    document.getElementById("recInfo").innerText+". Action has been overused(decreased effectivness)"
+    }
     changeRep(0.1,0.1);
+    
+    ActionHist.push("Recruit");
+
 }
 
 function overUsed(temp)
@@ -474,6 +486,18 @@ function overUsed(temp)
             //console.log(count);
         }
         //return count;
+    }
+    if(document.getElementById("RepHint").innerText.includes("Action"))
+    {
+        document.getElementById("RepHint").innerText=
+        document.getElementById("RepHint").innerText.substring(0,7);
+        
+    }
+    if(document.getElementById("recInfo").innerText.includes("Action"))
+    {
+        document.getElementById("recInfo").innerText=
+        document.getElementById("recInfo").innerText.substring(0,document.getElementById("recInfo").innerText.substring.length)
+
     }
      return count;   
 }
@@ -512,13 +536,10 @@ function RepEvents()
     
     if(overUsed("RepEvents")>3)
     {
-        //console.log("heh");
-        //RepSuccess=RepSuccess/2;
         document.getElementById("RepHint").innerHTML=
         document.getElementById("RepHint").innerText+". Action has been overused(decreased effectivness)";
-        //if(overUsed("RepEvents")>4)
-        //RepSuccess=RepSuccess/2;
     }
+
     ActionHist.push("RepEvents");
     //console.log(RepSuccess);
 }
@@ -529,7 +550,7 @@ changeDis(0);
 changeProd(0);
 changeTime(0);
 addPrompt("Tip : check out the shop, and don't forget to check back here once in awhile", "flex_News");
-openTab(event, 'News');
-
+//openTab(document.getElementById("tabNews"), 'News');
+document.getElementById("tabNews").click();
 
 
