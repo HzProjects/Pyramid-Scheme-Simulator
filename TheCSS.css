@@ -57,6 +57,7 @@ span:hover(){
     border: 1px solid #ccc;
     background-color: #f1f1f1;
     width:700px;
+
   }
   
   /* Style the buttons that are used to open the tab content */
@@ -66,8 +67,10 @@ span:hover(){
     border: none;
     outline: none;
     cursor: pointer;
-    padding: 14px 71.9px;
+    height: 20px;
+    width: 25%;
     transition: 0.3s;
+    padding:20px 0px 30px;
   }
   
   /* Change background color of buttons on hover */
@@ -96,4 +99,5 @@ span:hover(){
 }
 .justifyLeft {
   justify-content: left;
+  /*overflow: auto;*/
 }

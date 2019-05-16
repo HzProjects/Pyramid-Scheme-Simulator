@@ -58,7 +58,7 @@ function Selling() { //Specific calc for selling
 
     if(Products >0)
     {
-        console.log("Producst above 1")
+        //console.log("Producst above 1")
         if(Offer < Prod_Cost*4)
         {
             
@@ -72,7 +72,7 @@ function Selling() { //Specific calc for selling
                     SMTimer=0;
                 
             }
-            console.log("hello")
+            //console.log("hello")
             if(Medium=="2")
             {
                 changeTime(24);
@@ -276,12 +276,15 @@ function changeTime(Differ) //function for changing time, timers, and decide wha
         addPrompt("You earned "+monthlyCash+"$ this month, and lost "+monthlyLoss+"$.","flex_News");
         monthlyCash=0;monthlyLoss=0;
         //if(distribute>20 && Math.round(distribute*.05*Rep) <20)
-        if(Rep<10)
-        changeDis(-1*Math.round(distribute*.05*Rep));
+        if(Rep >5)
+        {
+        if(Rep<20)
+        changeDis(-1*Math.round(distribute*.025*Rep));
         else
         changeDis(-1*Math.round(distribute*.5));
+        }
 
-        changeRep(0,-1*(Rep*.1));
+        //changeRep(0,-1*(Rep*.1));
     }
     if(Time.getFullYear() > tempYear)
     {
@@ -404,20 +407,25 @@ function Recruit(){
     recruitAmt=0;
     var Target = aTemp.options[aTemp.selectedIndex].value;
     if(Target=="1")
+    {
         recruitAmt=Math.round((Population_Framily/10));
+        changeRep(0.1,0.3);
+    }
     else if(Target=="2")
     {
         var i=0;
         var temp=0;
-        while(distribute >Pyr_Layers[i] && i!=Pyr_Layers.length-1 )
+        while(distribute >temp && i!=Pyr_Layers.length-1 )
         {
             temp+=Pyr_Layers[i];
             i++;
         }
-        temp=Math.floor(Pyr_Layers[i]/3);
-        if(temp>20)
-        recruitAmt=Math.round(Math.random()*(distribute-temp))
-        //recruitAmt=Math.round((recruitAmt-(Rep^3)));
+        console.log(temp);
+        temp=Math.round(temp-distribute);
+        //if(temp>500)
+        //recruitAmt+=Math.round(Math.random()*(distribute-temp))
+        recruitAmt=Math.round((temp/Rep));
+        changeRep(.1,.1);
 
     }
     else if(Target=="3")
@@ -451,30 +459,68 @@ function Recruit(){
 
 function overUsed(temp)
 {
+    
+    var count=0;
     if(ActionHist.length>2)
-        if(ActionHist[ActionHist.length-1]==temp &&ActionHist[ActionHist.length-2]==temp &&ActionHist[ActionHist.length-3]==temp)
-            return true;
+    {
+        while(ActionHist.length>10 )
+            ActionHist.splice(0,1);
+        //var count=0;
+        for(var i=0; i<10; i++)
+        {
+            //console.log(ActionHist[i]);
+            if(ActionHist[i]==temp)
+                count++;
+            //console.log(count);
+        }
+        //return count;
+    }
+     return count;   
 }
 function RepEvents()
 {
     var temp = document.getElementById("theMedium");
     var Target=temp.options[temp.selectedIndex].value;
     RepSuccess=Math.random();
+    if(overUsed("RepEvents")>2)
+    {
+        //console.log(RepSuccess);
+        //console.log("heh");
+        RepSuccess=RepSuccess/3;
+        //document.getElementById("RepHint").innerHTML="hrhsg";
+        //document.getElementById("RepHint").innerText+". Action has been overused(decreased effectivness)";
+        if(overUsed("RepEvents")>5)
+            RepSuccess=0;
+        //console.log(RepSuccess);
+    }
     if(Target==1)
     {
-        console.log("Hello")
+        //console.log("Hello")
         changeTime(12);
         if(RepSuccess>.50)
         {
             Population_Framily+=20;
-            changeRep(0,-1);
-            document.getElementById("RepHint").innerText="Success"
+            changeRep(0,-.5);
+            document.getElementById("RepHint").innerText="Success";
         }
         else
         {
-            document.getElementById("RepHint").innerText="Failure"
+            document.getElementById("RepHint").innerText="Failure";
         }
     }
+
+    
+    if(overUsed("RepEvents")>3)
+    {
+        //console.log("heh");
+        //RepSuccess=RepSuccess/2;
+        document.getElementById("RepHint").innerHTML=
+        document.getElementById("RepHint").innerText+". Action has been overused(decreased effectivness)";
+        //if(overUsed("RepEvents")>4)
+        //RepSuccess=RepSuccess/2;
+    }
+    ActionHist.push("RepEvents");
+    //console.log(RepSuccess);
 }
 //Functions to call at the start of page loading
 //var tipRunner = setInterval(function(){TipFunc()},120000);
@@ -483,6 +529,7 @@ changeDis(0);
 changeProd(0);
 changeTime(0);
 addPrompt("Tip : check out the shop, and don't forget to check back here once in awhile", "flex_News");
+openTab(event, 'News');
 
 
 
