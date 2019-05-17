@@ -30,11 +30,27 @@ var NumberName=["","k","M","B","T","Q"];
 var ActionHist =["Nothing"];
 var yourLayer=Math.round(Math.random()*4);
 var ImproveSellCost=0;
-var ImproveSellTime=5;
+var ImproveSellTime=8;
 var ImproveRecCost=0;
-var ImproveRecTime=5;
-//var Improve
-
+var ImproveRecTime=12;
+var ImproveSellAmt=0;
+var ImproveRecAmt=0;
+var acheivePop=[]
+var acheiveDisvar=0;
+var acheiveRepvar=0;
+var acheivemoneyvar=0;
+acheiveAdd("Reach a new low",3,"RepCount1");
+acheiveAdd("Get 30 distributors",3,"distributeCount1");
+acheiveAdd("Get $10k",3,"moneyCount1");
+acheiveAdd("Be at it for a year",3,"yearCount1");
+acheiveAdd("Get $100k",2,"moneyCount2");
+acheiveAdd("Reach even lower",2,"RepCount2");
+acheiveAdd("Be at it for a decade",2,"yearCount2");
+acheiveAdd("Get 3000 distributors",2,"distributeCount2");
+acheiveAdd("Become the lowest",1,"RepCount3");
+acheiveAdd("Be at it for a century",1,"yearCount3");
+acheiveAdd("Get $1M",1,"moneyCount3");
+acheiveAdd("Get 3000000 distributors",1,"distributeCount3");
 function addPrompt(Say, Type) { //adds a "aPrompt" class to the first div
     var aTempClass = document.getElementById(Type);
     var node = document.createElement("div");
@@ -63,13 +79,13 @@ function Selling() { //Specific calc for selling
     if(Products >0)
     {
         //console.log("Producst above 1")
-        if(Offer < Prod_Cost*4)
+        if(Offer < Prod_Cost*5)
         {
             
             var howMuchProd = Math.round(Math.random() * abilitySelling); //math
             if(Medium=="1")
             {
-                changeTime(48+Math.round(Math.random()*240));
+                changeTime(48+Math.round(Math.random()*300));
                 if(adTimer >0)
                     adTimer--;
                 if(SMTimer >0)
@@ -101,7 +117,9 @@ function Selling() { //Specific calc for selling
                 howMuchProd-=3;
             if(howMuchProd > Products)
                 howMuchProd = Products;
-            if(Offer > Prod_Cost*3) //prevent putting a high price
+            if(Offer >Prod_Cost*4)
+                howMuchProd=Math.round(howMuchProd/6)
+            else if(Offer > Prod_Cost*3) //prevent putting a high price
                 howMuchProd = Math.round(howMuchProd/4);
             else if(Offer > Prod_Cost*2)
                 howMuchProd = Math.round(howMuchProd/3.0)
@@ -129,19 +147,7 @@ function Selling() { //Specific calc for selling
     function revertRed() {
         document.getElementById("Prod_F").style.color = "black";
     }
-    changeRep(.05,.05);
-    /*if(Medium!="2")
-    {
-    if(abilitySelling<3)
-        abilitySelling+=.05;
-    else if(abilitySelling <9)
-        abilitySelling+=.025;
-    else if(abilitySelling <27)
-        abilitySelling+=.01;
-    //console.log(abilitySelling);
-    changePyrInfo(.15);
-
-    }*/
+    changeRep(0,.03);
     
     ActionHist.push("Selling");
 }
@@ -155,6 +161,8 @@ function start() { //Functions ran when you pay the start fee
     changeProd(Math.ceil(250/Prod_Cost));
     document.getElementById("theCostforOne").innerHTML = "(" + Prod_Cost + "$ each)";
     document.getElementById("currentBuying").innerHTML = document.getElementById("BuySlider").valueAsNumber;
+    
+
 }
 
 function stop() { //functions ran when you cancel
@@ -190,28 +198,26 @@ function getAbbrev(theNumber,decimalAmt)
 function changePyrInfo()
 {
     var tempString="";
-    if(Rep<=0)
+    if(Rep<=1)
     tempString="High";
-    else if(Rep<=1)
-    tempString="Moderate";
     else if(Rep<=3)
-    tempString="Fairly moderate";
+    tempString="Moderate";
     else if(Rep<=5)
+    tempString="Fairly moderate";
+    else if(Rep<=7)
     tempString="Somewhat moderate";
-    else if(Rep<=8)
+    else if(Rep<=9)
     tempString="Barely moderate";
-    else if(Rep<=12)
+    else if(Rep<=13)
     tempString="Somewhat low";
     else if(Rep<=17)
     tempString="low";
     else if(Rep<=23)
     tempString="Very low";
-    else if(Rep<=29)
+    else if(Rep<=30)
     tempString="Trash";
-    else if(Rep<=35)
+    else if(Rep<=38)
     tempString="Very Trash";
-    else if(Rep<=41)
-    tempString="Complete Trash";
     else
     tempString="The Trash";
     document.getElementById("displayPublicKnow").innerText="Reputation:"+tempString;
@@ -232,12 +238,21 @@ function changeRep(PRep,RepOwn)
 }
 function changeCash(Differ)
 {
+    //console.log(isNaN(Differ))
+    if(!isNaN(Differ))
+    {
     if(Differ >0)
     monthlyCash+=Differ;
     else
     monthlyLoss+=-1*Differ;
+    if(myCash+Differ<0)
+    myCash=0;
+    else
     myCash+=Differ;
-    document.getElementById("money_F").innerHTML="$"+getAbbrev(myCash,1);
+    document.getElementById("money_F").innerText="$"+getAbbrev(myCash,1);
+}   
+    acheiveCheckMoney();
+
 }
 function changeDis(Differ)
 {
@@ -271,15 +286,22 @@ function changeProd(Differ)
 }
 function changeTime(Differ) //function for changing time, timers, and decide what to change at date intervals
 {
+    if(Differ>750)
+    {
+        changeTime(Differ-750);
+        Differ=750;
+    }
+    console.log(Differ);
     var tempYear = Time.getFullYear();
     var tempMonth = Time.getMonth();
     Time.setHours(Time.getHours() +Differ)
     document.getElementById("theTime").innerHTML = Time.getFullYear()+"/"+Time.getMonth()+"/"+Time.getDate()+ " (Year/Month/Day)";
-
+    
     if(Time.getMonth() >tempMonth)
     {
         //abilitySelling+=.02;
         disEarning();
+        if(monthlyCash>0)
         changeCash(-200+(Math.round(monthlyCash*-.1)));
         changeProd(Math.ceil(200/Prod_Cost))
         //console.log(-20+(Math.round(monthlyCash*-.1)))
@@ -290,17 +312,21 @@ function changeTime(Differ) //function for changing time, timers, and decide wha
         if(Rep >5)
         {
         if(Rep<50)
-        changeDis(-1*Math.round(distribute*.01*Rep));
+        changeDis(-1*Math.round(distribute*.01*(Rep-5)));
         else
         changeDis(-1*Math.round(distribute*.5));
         }
-
+        else
+        changeDis(Math.round(distribute*Rep*.01)+1);
+        changeRep(0.2,0);
         //changeRep(0,-1*(Rep*.1));
         overUsed("");
     }
     if(Time.getFullYear() > tempYear)
     {
-        
+        ActionHist.push("");ActionHist.push("");ActionHist.push("");
+        acheiveCheckTime();
+
     }
 
     if(adTimer=3)
@@ -422,7 +448,6 @@ function Recruit(){
     {
         recruitAmt=Math.round((Population_Framily/10));
         
-        changeRep(0.1,0.3);
     }
     else if(Target=="2")
     {
@@ -438,7 +463,6 @@ function Recruit(){
         //if(temp>500)
         //recruitAmt+=Math.round(Math.random()*(distribute-temp))
         recruitAmt=Math.round((temp/Rep));
-        changeRep(.1,.1);
 
     }
     else if(Target=="3")
@@ -521,7 +545,7 @@ function RepEvents()
     if(overUsed("RepEvents")>4)
     {
         RepSuccess=RepSuccess/3; 
-        if(overUsed("RepEvents")>7)
+        if(overUsed("RepEvents")>8)
             RepSuccess=0;
         //console.log(RepSuccess);
     }
@@ -532,7 +556,7 @@ function RepEvents()
         if(RepSuccess>.50)
         {
             Population_Framily+=20;
-            changeRep(0,-1);
+            changeRep(-.05,-1);
             document.getElementById("RepHint").innerText="Success";
         }
         else
@@ -557,32 +581,108 @@ function RepEvents()
         {
             if(ImproveSellCost<myCash)
             {
-                abilitySelling+=.25;
+                abilitySelling+=.75;
+                if(myCash-ImproveSellCost>=0)
                 changeCash(-1*ImproveSellCost);
                 changeTime(ImproveSellTime);
-                ImproveSellTime+=5;
+                ImproveSellTime+=5+Math.round((Math.pow(1.4,ImproveSellAmt)));
                 if(ImproveSellTime>20)
-                    ImproveSellCost+=10;
-                document.getElementById("ImproveSell").innerText="will cost "+ImproveSellCost+"$ & Will take "+
-                ImproveSellTime+ " hours to do";
+                    ImproveSellCost+=16;
+                document.getElementById("ImproveSell").innerText="Will cost "+ImproveSellCost+"$ & will take "+
+                ImproveSellTime+ " hours to do ("+ ImproveSellAmt+ "-->"+(ImproveSellAmt+1)+")";
+                ImproveSellAmt++;
+
             }
+            
 
         }
         else if(Type==2)
         {
             if(ImproveRecCost<myCash)
             {
-                abilityRecruiting+=.25;
+                abilityRecruiting+=.75;
                 changeCash(-1*ImproveRecCost);
                 changeTime(ImproveRecTime)
-                ImproveRecTime+=5;
+                ImproveRecTime+=10+Math.round((Math.pow(1.7,ImproveRecAmt)));
                 if(ImproveRecTime>20)
-                    ImproveRecCost+=10;
-                document.getElementById("ImproveRec").innerText="will cost "+ImproveRecCost+"$ & Will take "+
+                    ImproveRecCost+=20;
+                document.getElementById("ImproveRec").innerText="Will cost $"+ImproveRecCost+" & will take "+
                 ImproveRecTime+ " hours to do";
+                ImproveRecAmt++;
+            }
+            else{
+                setTimeout(revertRed,1000);
+                function revertRed() {
+                document.getElementById("money_F").style.color = "black";
+                }
             }
         }
     }
+
+function acheiveAdd(name,Layer,nameID)
+{
+    var node=document.createElement("div");
+    node.className="insidePrompt";
+    node.id=nameID;
+    var tNode=document.createTextNode(name.toString());
+    var pic=document.createElement("img");
+
+    //if(Layer==4)
+    pic.src="Images/UnknownPyramid.png";
+    //else if(Layer==3)
+    //pic.src="Images/BronzePyramid.png";
+    //else if(Layer==2)
+    //pic.src="Images/SilverPyramid.png";
+    //else
+    //pic.src="Images/GoldPyramid.png";
+
+    pic.height=15;
+    pic.width=15;
+    
+    node.appendChild(pic);node.appendChild(tNode);
+    //console.log(node);
+    document.getElementById("AcheiveDiv").appendChild(node);
+}
+function acheiveCheckTime()
+{
+    if(Time.getFullYear()-2000>=1)
+    {
+    document.getElementById("yearCount1").children[0].src="Images/BronzePyramid.png";
+    addPrompt("You've gotten the bronze year acheivement","flex_News")
+    }
+    if(Time.getFullYear()-2000>=10)
+    {
+    document.getElementById("yearCount2").children[0].src="Images/SilverPyramid.png";
+    addPrompt("You've gotten the silver year acheivement","flex_News")
+
+    }
+    if(Time.getFullYear()-2000>=100)
+    {
+    document.getElementById("yearCount3").children[0].src="Images/GoldPyramid.png";
+    addPrompt("You've gotten the gold year acheivement","flex_News")
+
+    }
+}
+function acheiveCheckMoney()
+{
+    if(myCash>=10000)
+    {
+    document.getElementById("moneyCount1").children[0].src="Images/BronzePyramid.png";
+    addPrompt("You've gotten the bronze money acheivement","flex_News")
+    }
+    if(myCash>=100000)
+    {
+    document.getElementById("moneyCount2").children[0].src="Images/SilverPyramid.png";
+    addPrompt("You've gotten the silver money acheivement","flex_News")
+
+    }
+    if(myCash>=1000000)
+    {
+    document.getElementById("moneyCount3").children[0].src="Images/GoldPyramid.png";
+    addPrompt("You've gotten the gold money acheivement","flex_News")
+
+    }
+}
 //Functions to call at the start of page loading
 //var tipRunner = setInterval(function(){TipFunc()},120000);
 changeCash(0);

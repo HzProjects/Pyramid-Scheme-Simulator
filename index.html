@@ -8,7 +8,7 @@
     <link rel="icon" href=Images/Pyramid.png>
 </head>
   <body>
-    <div style="width:1000px"><!--wraps everything-->
+    <div style="width:800px"><!--wraps everything-->
     <div class= "flex-box justifyLeft">
       <div><h1 style= "color:darkgoldenrod" >Pyramid Scheme Simulator</h1></div>
       <div class="fItem" id="money_F">Your Javascript broke, so try refreshing</div>
@@ -18,7 +18,6 @@
     
     <!--<input type="button" value="a button" onclick=changeCash(10) /> -->
     <div>
-    
     <div class="tab" style="flex-flow: nowrap">
       <button id="tabNews" class="tablinks" onclick="openTab(event, 'News');">News</button>
       <button id="tabShop" class="tablinks" onclick="openTab(event, 'Shop');">Shop</button>
@@ -73,7 +72,7 @@
           <p id="displayPublicKnow" style="text-align: center">Reputation:Moderate</p>
           <!--<p id="displayPublicKnow" style="text-align: center">Reputation:Moderate</p>
           <input type="button" onclick="changeDis(1000)" value="Get 1000 Distributor" style="display: none">
-          <input type="button" onclick="changeDis(10000)" value="Get 10000 Distributors" style="display: none">-->
+          <input type="button" onclick="changeDis(10000)" value="Get 10000 Distributors" style="display: block">-->
         </div>
       <div id="ReputationHTML" class="shopContent aPrompt">
         <p style="text-align: center">Reputation </p>
@@ -97,15 +96,15 @@
       <div class="shopContent aPrompt" id="improvements">
         <p style="text-align: center">Improvements</p>
         <div class="flex-box">
-          <p>Selling</p>
+          <p>Get better at selling products</p>
           <input type="button" value="Attempt" onclick="Improvements(1)"> 
         </div>
-        <p id="ImproveSell" style="text-align: center">Will take 5 hours to do</p>
+        <p id="ImproveSell" style="text-align: center">Will take 8 hours to do</p>
         <div class="flex-box">
-          <p>Recruiting</p>
+          <p>Get better at recruiting</p>
           <input type="button" value="Attempt" onclick="Improvements(2)">
         </div>
-        <p id="ImproveRec" style="text-align: center">Will take 5 hours to do</p>
+        <p id="ImproveRec" style="text-align: center">Will take 12 hours to do</p>
 
       </div>
     </div>
@@ -138,6 +137,14 @@
       
     <div id="Other" class="tabcontent">
       <a href = "https://en.wikipedia.org/wiki/Pyramid_scheme" target = "_blank">Click Here to learn more about pyramid schemes</a>
+      <div class="aPrompt">
+        <p style="text-align: center">Acheivements</p>
+        <div class="flex-box" id="AcheiveDiv">
+        </div>
+<br><br><br><br><br><br><br><br><br><br><br><br><br>
+          <br><br><br><br><br><br>
+          
+      </div>
     </div>
     
     <div id="News" class="tabcontent">
@@ -147,6 +154,7 @@
     </div>
     
   </div>
+
     </div> <!--end of wrapper-->
     <script src="TheJS.js"></script>
     
