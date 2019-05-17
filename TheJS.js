@@ -692,5 +692,7 @@ changeTime(0);
 addPrompt("Tip : check out the shop, and don't forget to check back here once in awhile", "flex_News");
 //openTab(document.getElementById("tabNews"), 'News');
 document.getElementById("tabNews").click();
+document.getElementById("Offer").value=Prod_Cost+Math.ceil(Prod_Cost/10);
+
 
 
