@@ -26,10 +26,11 @@
     </div>
       
     <div id="Act" class="tabcontent">
-      <div class="flex-box">
+      <div class="flex-box shopContent">
       <p id= "theTime">You shouldn't be able to see this</p>
       <input id="autoTime" type="button" value="Click to pass time automatically" onclick="startAuto()">
-      <input type="button" value="Click to pass a month" onclick="changeTime(744)">
+      <input type="button" value="Pass a month" onclick="changeTime(744)">
+      <input type="button" value="Pass a year" onclick="changeTime(8760)">
       </div>
       <div class ="aPrompt">
         <span class="aExit" onclick="this.parentElement.parentElement.removeChild(this.parentElement);">x</span>
@@ -80,7 +81,7 @@
           <p>Options</p>
           <select>
             <option value="1">Further your connections</option>
-            <!--<option value="2">Rebrand the company</option>
+            <!--<option value="2">Dissociate yourself from the c</option>
             <option value="3"></option>-->
           </select>
           <input type="button" onclick="RepEvents()" value="Attempt"> 
@@ -127,7 +128,7 @@
             <input type="button" value="&#60;" 
             onclick="document.getElementById('BuySlider').valueAsNumber--;document.getElementById('currentBuying').innerHTML=document.getElementById('BuySlider').valueAsNumber"> 
             <input type="button" value="&#62;"
-            onclick="document.getElementById('BuySlider').valueAsNumber++;document.getElementById('currentBuying').innerHTML=document.getElementById('BuySlider').valueAsNumber">
+            onclick="document.getElementById('BuySlider').valueAsNumber++;document.getElementById('currentBuying').innerHTML=document.getElementById('BuySlider').valueAsNumber"> 
             <button onclick="if(checkCash_Prod((Prod_Cost * -1) * document.getElementById('BuySlider').valueAsNumber)){changeProd(document.getElementById('BuySlider').valueAsNumber)}">Buy </button>
             <p id="currentBuying"></p>
           </div>

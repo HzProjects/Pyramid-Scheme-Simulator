@@ -39,6 +39,7 @@ var acheivePop=[]
 var acheiveDisvar=0;
 var acheiveRepvar=0;
 var acheivemoneyvar=0;
+
 acheiveAdd("Reach a new low",3,"RepCount1");
 acheiveAdd("Get 30 distributors",3,"distributeCount1");
 acheiveAdd("Get $10k",3,"moneyCount1");
@@ -46,11 +47,14 @@ acheiveAdd("Be at it for a year",3,"yearCount1");
 acheiveAdd("Get $100k",2,"moneyCount2");
 acheiveAdd("Reach even lower",2,"RepCount2");
 acheiveAdd("Be at it for a decade",2,"yearCount2");
-acheiveAdd("Get 3000 distributors",2,"distributeCount2");
+acheiveAdd("Get 3k distributors",2,"distributeCount2");
 acheiveAdd("Become the lowest",1,"RepCount3");
 acheiveAdd("Be at it for a century",1,"yearCount3");
 acheiveAdd("Get $1M",1,"moneyCount3");
-acheiveAdd("Get 3000000 distributors",1,"distributeCount3");
+acheiveAdd("Get 3M distributors",1,"distributeCount3");
+document.cookie= "acheiveDisvar="+acheiveDisvar;
+document.cookie= "acheiveRepvar="+acheiveRepvar;
+document.cookie="acheivemoneyvar="+acheivemoneyvar;
 function addPrompt(Say, Type) { //adds a "aPrompt" class to the first div
     var aTempClass = document.getElementById(Type);
     var node = document.createElement("div");
@@ -198,25 +202,25 @@ function getAbbrev(theNumber,decimalAmt)
 function changePyrInfo()
 {
     var tempString="";
-    if(Rep<=1)
+    if(Rep<=3)
     tempString="High";
-    else if(Rep<=3)
+    else if(Rep<=6)
     tempString="Moderate";
-    else if(Rep<=5)
-    tempString="Fairly moderate";
-    else if(Rep<=7)
-    tempString="Somewhat moderate";
     else if(Rep<=9)
+    tempString="Fairly moderate";
+    else if(Rep<=12)
+    tempString="Somewhat moderate";
+    else if(Rep<=18)
     tempString="Barely moderate";
-    else if(Rep<=13)
+    else if(Rep<=24)
     tempString="Somewhat low";
-    else if(Rep<=17)
-    tempString="low";
-    else if(Rep<=23)
-    tempString="Very low";
     else if(Rep<=30)
+    tempString="low";
+    else if(Rep<=36)
+    tempString="Very low";
+    else if(Rep<=42)
     tempString="Trash";
-    else if(Rep<=38)
+    else if(Rep<=48)
     tempString="Very Trash";
     else
     tempString="The Trash";
@@ -235,6 +239,7 @@ function changeRep(PRep,RepOwn)
 
     Rep=OwnRep+PyrRep;
     changePyrInfo();
+    acheiveCheckRep();
 }
 function changeCash(Differ)
 {
@@ -273,6 +278,7 @@ function changeDis(Differ)
     else
         document.getElementById("Dis_F").innerHTML=getAbbrev(distribute,1)+" distributors";
     Population_local=Population_local-Differ;
+    acheiveCheckDis();
 
 }
 function changeProd(Differ)
@@ -299,16 +305,15 @@ function changeTime(Differ) //function for changing time, timers, and decide wha
     
     if(Time.getMonth() >tempMonth)
     {
-        //abilitySelling+=.02;
         disEarning();
         if(monthlyCash>0)
+        {
         changeCash(-200+(Math.round(monthlyCash*-.1)));
-        changeProd(Math.ceil(200/Prod_Cost))
-        //console.log(-20+(Math.round(monthlyCash*-.1)))
-        Population_Framily+=3;
+        changeProd(Math.ceil(200/Prod_Cost));
+        }
+        Population_Framily+=5;
         addPrompt("You earned "+monthlyCash+"$ this month, and lost "+monthlyLoss+"$.","flex_News");
         monthlyCash=0;monthlyLoss=0;
-        //if(distribute>20 && Math.round(distribute*.05*Rep) <20)
         if(Rep >5)
         {
         if(Rep<50)
@@ -318,9 +323,11 @@ function changeTime(Differ) //function for changing time, timers, and decide wha
         }
         else
         changeDis(Math.round(distribute*Rep*.01)+1);
-        changeRep(0.2,0);
-        //changeRep(0,-1*(Rep*.1));
-        overUsed("");
+        if(Rep<20)
+        changeRep(0.1,0.1);
+        else
+        changeRep(-.1,-.1);
+        ActionHist.push("");
     }
     if(Time.getFullYear() > tempYear)
     {
@@ -472,10 +479,6 @@ function Recruit(){
         else 
             recruitAmt=Math.round(Math.random()*1);
     }
-    //console.log(recruitAmt);
-    //recruitAmt=Math.round((recruitAmt-(Rep^3))/2);
-    //console.log(recruitAmt);
-    //recruitAmt+=abilityRecruiting;
     if(overUsed("Recruit")>5)
         recruitAmt=Math.round(recruitAmt/2);
 
@@ -562,6 +565,14 @@ function RepEvents()
         else
         {
             document.getElementById("RepHint").innerText="Failure";
+        }
+    }
+    if(Target==2)
+    {
+        changeTime(12);
+        if(RepSuccess>.5)
+        {
+
         }
     }
 
@@ -665,24 +676,79 @@ function acheiveCheckTime()
 }
 function acheiveCheckMoney()
 {
-    if(myCash>=10000)
+    if(myCash>=10000 && acheivemoneyvar ==0)
     {
     document.getElementById("moneyCount1").children[0].src="Images/BronzePyramid.png";
     addPrompt("You've gotten the bronze money acheivement","flex_News")
+    acheivemoneyvar=1;
     }
-    if(myCash>=100000)
+    if(myCash>=100000 && acheivemoneyvar ==1)
     {
     document.getElementById("moneyCount2").children[0].src="Images/SilverPyramid.png";
     addPrompt("You've gotten the silver money acheivement","flex_News")
-
+    acheivemoneyvar=2;
     }
-    if(myCash>=1000000)
+    if(myCash>=1000000 && acheivemoneyvar ==2)
     {
     document.getElementById("moneyCount3").children[0].src="Images/GoldPyramid.png";
     addPrompt("You've gotten the gold money acheivement","flex_News")
-
     }
 }
+function acheiveCheckDis()
+{
+    if(distribute>=30 && acheiveDisvar==0)
+    {
+    document.getElementById("distributeCount1").children[0].src="Images/BronzePyramid.png";
+    addPrompt("You've gotten the bronze distributor acheivement","flex_News")
+    acheiveDisvar=1;
+    }
+    if(distribute>=3000 && acheiveDisvar==1)
+    {
+    document.getElementById("distributeCount2").children[0].src="Images/SilverPyramid.png";
+    addPrompt("You've gotten the silver distributor acheivement","flex_News")
+    acheiveDisvar=2;
+    }
+    if(distribute>=3000000 && acheiveDisvar==2)
+    {
+    document.getElementById("distributeCount3").children[0].src="Images/GoldPyramid.png";
+    addPrompt("You've gotten the gold distributor acheivement","flex_News")
+    }
+}
+function acheiveCheckRep()
+{
+    if(Rep>36 && acheiveRepvar==0)
+    {
+    document.getElementById("RepCount1").children[0].src="Images/BronzePyramid.png";
+    addPrompt("You've gotten the bronze reputation acheivement","flex_News")
+    acheiveRepvar=1;
+    }
+    if(Rep>42 && acheiveRepvar==1)
+    {
+    document.getElementById("RepCount2").children[0].src="Images/SilverPyramid.png";
+    addPrompt("You've gotten the silver reputation acheivement","flex_News")
+    acheiveRepvar=2;
+    }
+    if(Rep>48 && acheiveRepvar==2)
+    {
+    document.getElementById("RepCount3").children[0].src="Images/GoldPyramid.png";
+    addPrompt("You've gotten the gold reputation acheivement","flex_News")
+    }
+}
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
 //Functions to call at the start of page loading
 //var tipRunner = setInterval(function(){TipFunc()},120000);
 changeCash(0);
@@ -690,9 +756,10 @@ changeDis(0);
 changeProd(0);
 changeTime(0);
 addPrompt("Tip : check out the shop, and don't forget to check back here once in awhile", "flex_News");
+addPrompt("Refreshing the page will only keep your acheivements, so can try refreshing if you've lost too much", "flex_News");
+
 //openTab(document.getElementById("tabNews"), 'News');
 document.getElementById("tabNews").click();
 document.getElementById("Offer").value=Prod_Cost+Math.ceil(Prod_Cost/10);
-
 
 
